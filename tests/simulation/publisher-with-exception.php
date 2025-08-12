@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace kuaukutsu\poc\queue\amqp;
 
+use stdClass;
 use DI\Container;
 use Thesis\Amqp\Config;
-use kuaukutsu\poc\queue\amqp\tests\stub\QueueHandlerStub;
 use kuaukutsu\poc\queue\amqp\tests\stub\QueueSchemaStub;
 
 use function kuaukutsu\poc\queue\amqp\test\argument;
@@ -26,32 +26,15 @@ $builder = (new QueueBuilder($container))
         )
     );
 
-$publisher = $builder->buildPublisher();
-
 $task = new QueueTask(
-    target: QueueHandlerStub::class,
+    /** @phpstan-ignore argument.type */
+    target: stdClass::class,
     arguments: [
         'id' => 1,
         'name' => 'test name',
     ],
 );
 
-// the EOInterceptor must process when reading/consume the task
-$publisher
+$builder
+    ->buildPublisher()
     ->push($schema, $task);
-$publisher
-    ->push($schema, $task);
-
-// confirm
-$publisher
-    ->withConfirm()
-    ->push(
-        $schema,
-        new QueueTask(
-            target: QueueHandlerStub::class,
-            arguments: [
-                'id' => 21211,
-                'name' => 'test confirm',
-            ],
-        ),
-    );

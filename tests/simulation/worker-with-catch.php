@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace kuaukutsu\poc\queue\amqp;
 
+use Throwable;
 use DI\Container;
 use Thesis\Amqp\Config;
+use Thesis\Amqp\DeliveryMessage;
 use kuaukutsu\poc\queue\amqp\tests\stub\QueueSchemaStub;
+use kuaukutsu\poc\queue\amqp\tests\stub\TryCatchInterceptor;
 
 use function Amp\trapSignal;
 use function kuaukutsu\poc\queue\amqp\test\argument;
@@ -26,7 +29,16 @@ $builder = (new QueueBuilder(new Container()))
     );
 
 $builder
+    ->withInterceptors(
+        new TryCatchInterceptor(),
+    )
     ->buildConsumer()
-    ->consume($schema);
+    ->consume(
+        $schema,
+        static function (DeliveryMessage $message, Throwable $exception): void {
+            echo 'nack: ' . $exception->getMessage();
+            $message->nack();
+        }
+    );
 
 trapSignal([\SIGTERM, \SIGINT]);

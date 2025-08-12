@@ -62,6 +62,18 @@
     },
     "sort-packages": true
   },
+  "scripts": {
+    "check": [
+      "@phpcs",
+      "@psalm",
+      "@phpstan",
+      "@rector"
+    ],
+    "phpcs": "vendor/bin/phpcs",
+    "psalm": "vendor/bin/psalm --show-info --no-diff --no-cache",
+    "phpstan": "vendor/bin/phpstan analyze",
+    "rector": "vendor/bin/rector"
+  },
   "minimum-stability": "dev",
   "prefer-stable": true
 }

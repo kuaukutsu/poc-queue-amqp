@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace kuaukutsu\poc\queue\amqp;
 
+use Amp\Redis\RedisCache;
+use Amp\Redis\Sync\RedisMutex;
 use DI\Container;
 use Thesis\Amqp\Config;
+use kuaukutsu\poc\queue\amqp\interceptor\ExactlyOnceInterceptor;
 use kuaukutsu\poc\queue\amqp\tests\stub\QueueSchemaStub;
 
+use function Amp\Redis\createRedisClient;
 use function Amp\trapSignal;
 use function kuaukutsu\poc\queue\amqp\test\argument;
 
@@ -25,7 +29,14 @@ $builder = (new QueueBuilder(new Container()))
         )
     );
 
+$redis = createRedisClient('redis://redis:6379');
 $builder
+    ->withInterceptors(
+        new ExactlyOnceInterceptor(
+            new RedisCache($redis),
+            new RedisMutex($redis),
+        ),
+    )
     ->buildConsumer()
     ->consume($schema);
 

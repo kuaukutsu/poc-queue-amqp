@@ -29,6 +29,11 @@ composer-cli: ## composer console
 		composer:latest \
 		sh
 
+check:
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
+		composer:latest \
+		composer check
+
 psalm: ## psalm
 	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
@@ -74,8 +79,6 @@ build:
 	- USER=$(USER) docker compose -f ./docker-compose.yml build redis
 
 remove: down _image_remove _container_remove _volume_remove
-
-check: phpcs psalm phpstan
 
 app:
 	USER=$(USER) docker compose -f ./docker-compose.yml run --rm -u $(USER) -w /app/src cli sh
