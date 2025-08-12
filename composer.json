@@ -1,0 +1,67 @@
+{
+  "name": "kuaukutsu/poc-queue-amqp",
+  "description": "Proof of Concept: Task Queue by RabbitMQ",
+  "type": "library",
+  "license": "MIT",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "Dmitriy Krivopalov",
+      "email": "dimarik82@gmail.com"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/kuaukutsu/poc-queue-amqp/issues",
+    "source": "https://github.com/kuaukutsu/poc-queue-amqp"
+  },
+  "require": {
+    "php": "^8.3",
+    "amphp/cache": "^2.0",
+    "amphp/sync": "^2.3",
+    "php-di/php-di": "^7.0",
+    "ramsey/uuid": "^4.9",
+    "thesis/amqp": "^1.0.2"
+  },
+  "require-dev": {
+    "ext-pcntl": "*",
+    "ext-redis": "*",
+    "amphp/redis": "^2.0",
+    "phpstan/phpstan": "^2.0",
+    "phpunit/phpunit": "^10.1",
+    "rector/rector": "^2.0",
+    "roave/security-advisories": "dev-latest",
+    "slevomat/coding-standard": "^8.7",
+    "squizlabs/php_codesniffer": "^3.7",
+    "vimeo/psalm": "^6.13"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "kuaukutsu\\poc\\queue\\amqp\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "kuaukutsu\\poc\\queue\\amqp\\tests\\": "tests"
+    },
+    "files": [
+      "tests/functions.php"
+    ]
+  },
+  "config": {
+    "platform": {
+      "php": "8.3.21"
+    },
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

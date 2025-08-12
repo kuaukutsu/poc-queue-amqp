@@ -1,0 +1,103 @@
+x-default-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "5m"
+    max-file: "3"
+
+x-service-volume: &service-volume
+  - type: bind
+    source: .
+    target: /app
+
+name: queue_amqp
+services:
+  cli:
+    container_name: queue_amqp_cli
+    profiles: [ "cli" ]
+    build:
+      context: .docker/php/cli
+      target: app_devel
+      args:
+        UID: ${USER:-1} # ID:1 daemon, support: linux, mac
+        WORKDIR: "/app/src"
+    env_file:
+      - .docker/base.env
+    volumes: *service-volume
+    logging: *default-logging
+
+  rabbitmq:
+    container_name: queue_amqp_rabbitmq
+    profiles: [ "serve" ]
+    restart: on-failure
+    build:
+      context: .docker/rabbitmq
+      args:
+        UID: ${USER:-1} # ID:1 daemon, support: linux, mac
+    cap_drop:
+      - NET_ADMIN
+      - SYS_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 256M
+        reservations:
+          cpus: '0.5'
+          memory: 64M
+    configs:
+      - source: rabbitmq
+        target: /etc/rabbitmq/conf.d/rabbitmq.conf
+    ports:
+      - "15672:15672"
+    volumes:
+      - vrabbitmq:/var/lib/rabbitmq/
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    logging: *default-logging
+
+  redis:
+    container_name: queue_amqp_redis
+    profiles: [ "serve" ]
+    restart: on-failure
+    build:
+      context: .docker/redis
+      args:
+        UID: ${USER:-1} # ID:1 daemon, support: linux, mac
+    cap_drop:
+      - NET_ADMIN
+      - SYS_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    configs:
+      - source: redis
+        target: /usr/local/etc/redis/redis.conf
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - vredis:/data
+    logging: *default-logging
+
+configs:
+  rabbitmq:
+    name: conf_${VERSION:-1}
+    file: .docker/rabbitmq/rabbitmq.conf
+  redis:
+    name: conf_${VERSION:-1}
+    file: .docker/redis/redis.conf
+
+volumes:
+  vrabbitmq:
+  vredis:
