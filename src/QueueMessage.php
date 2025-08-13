@@ -2,17 +2,11 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\poc\queue\amqp\internal;
+namespace kuaukutsu\poc\queue\amqp;
 
 use LogicException;
-use Thesis\Amqp\Message;
-use kuaukutsu\poc\queue\amqp\QueueContext;
-use kuaukutsu\poc\queue\amqp\QueueTask;
 
-/**
- * @psalm-internal kuaukutsu\poc\queue\amqp
- */
-final readonly class ConsumeMessage
+final readonly class QueueMessage
 {
     public function __construct(
         public QueueTask $task,
@@ -23,10 +17,10 @@ final readonly class ConsumeMessage
     /**
      * @throws LogicException if Message violates protocol
      */
-    public static function makeFromMessage(Message $message): self
+    public static function makeFromMessage(string $message): self
     {
         $container = unserialize(
-            $message->body,
+            $message,
             [
                 'allowed_classes' => true,
             ]

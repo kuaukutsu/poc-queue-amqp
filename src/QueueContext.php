@@ -7,9 +7,6 @@ namespace kuaukutsu\poc\queue\amqp;
 use Serializable;
 use kuaukutsu\poc\queue\amqp\internal\SerializableDeprecated;
 
-/**
- * @api
- */
 final readonly class QueueContext implements Serializable
 {
     use SerializableDeprecated;

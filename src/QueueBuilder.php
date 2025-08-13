@@ -6,9 +6,9 @@ namespace kuaukutsu\poc\queue\amqp;
 
 use Thesis\Amqp\Client;
 use Thesis\Amqp\Config;
+use kuaukutsu\poc\queue\amqp\handler\HandlerInterface;
+use kuaukutsu\poc\queue\amqp\handler\Pipeline;
 use kuaukutsu\poc\queue\amqp\interceptor\InterceptorInterface;
-use kuaukutsu\poc\queue\amqp\interceptor\HandlerInterface;
-use kuaukutsu\poc\queue\amqp\interceptor\Pipeline;
 
 /**
  * @api

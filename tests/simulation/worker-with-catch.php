@@ -14,7 +14,7 @@ use kuaukutsu\poc\queue\amqp\tests\stub\QueueSchemaStub;
 use kuaukutsu\poc\queue\amqp\tests\stub\TryCatchInterceptor;
 
 use function Amp\trapSignal;
-use function kuaukutsu\poc\queue\amqp\test\argument;
+use function kuaukutsu\poc\queue\amqp\tests\argument;
 
 require dirname(__DIR__) . '/bootstrap.php';
 

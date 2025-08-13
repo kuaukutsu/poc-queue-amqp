@@ -8,9 +8,6 @@ use Serializable;
 use Ramsey\Uuid\Uuid;
 use kuaukutsu\poc\queue\amqp\internal\SerializableDeprecated;
 
-/**
- * @api
- */
 final readonly class QueueTask implements Serializable
 {
     use SerializableDeprecated;

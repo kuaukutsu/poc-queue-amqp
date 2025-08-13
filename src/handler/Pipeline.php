@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\poc\queue\amqp\interceptor;
+namespace kuaukutsu\poc\queue\amqp\handler;
 
 use Override;
 use Throwable;
 use Psr\Container\ContainerExceptionInterface;
-use kuaukutsu\poc\queue\amqp\FactoryInterface;
 use kuaukutsu\poc\queue\amqp\exception\FactoryException;
-use kuaukutsu\poc\queue\amqp\internal\ConsumeMessage;
+use kuaukutsu\poc\queue\amqp\FactoryInterface;
+use kuaukutsu\poc\queue\amqp\interceptor\InterceptorInterface;
 use kuaukutsu\poc\queue\amqp\QueueHandlerInterface;
+use kuaukutsu\poc\queue\amqp\QueueMessage;
 use kuaukutsu\poc\queue\amqp\QueueTask;
 
 /**
  * @see https://github.com/spiral/framework/blob/master/src/Interceptors/src/Handler/InterceptorPipeline.php
+ * @psalm-internal kuaukutsu\poc\queue\amqp
  */
 final class Pipeline implements HandlerInterface
 {
@@ -43,7 +45,7 @@ final class Pipeline implements HandlerInterface
     }
 
     #[Override]
-    public function handle(ConsumeMessage $message): void
+    public function handle(QueueMessage $message): void
     {
         if (isset($this->interceptors[$this->position])) {
             $this->interceptors[$this->position]->intercept($message, $this->next());

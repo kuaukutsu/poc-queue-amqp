@@ -12,7 +12,7 @@ use kuaukutsu\poc\queue\amqp\QueueBuilder;
 use kuaukutsu\poc\queue\amqp\tests\stub\QueueSchemaStub;
 
 use function Amp\trapSignal;
-use function kuaukutsu\poc\queue\amqp\test\argument;
+use function kuaukutsu\poc\queue\amqp\tests\argument;
 
 require dirname(__DIR__) . '/bootstrap.php';
 

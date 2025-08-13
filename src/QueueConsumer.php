@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace kuaukutsu\poc\queue\amqp;
 
 use Throwable;
-use Thesis\Amqp\Client;
 use Thesis\Amqp\Channel;
+use Thesis\Amqp\Client;
 use Thesis\Amqp\DeliveryMessage;
-use kuaukutsu\poc\queue\amqp\exception\QueueDeclareException;
 use kuaukutsu\poc\queue\amqp\exception\QueueConsumeException;
-use kuaukutsu\poc\queue\amqp\interceptor\HandlerInterface;
-use kuaukutsu\poc\queue\amqp\internal\ConsumeMessage;
+use kuaukutsu\poc\queue\amqp\exception\QueueDeclareException;
+use kuaukutsu\poc\queue\amqp\handler\HandlerInterface;
 
 /**
  * @api
@@ -51,7 +50,7 @@ final readonly class QueueConsumer
                 callback: static function (DeliveryMessage $delivery) use ($handler, $catch): void {
                     try {
                         $handler->handle(
-                            ConsumeMessage::makeFromMessage($delivery->message),
+                            QueueMessage::makeFromMessage($delivery->message->body),
                         );
                     } catch (Throwable $exception) {
                         if (is_callable($catch)) {

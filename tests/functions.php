@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace kuaukutsu\poc\queue\amqp\test;
+namespace kuaukutsu\poc\queue\amqp\tests;
 
-if (function_exists('kuaukutsu\poc\queue\amqp\test\argument') === false) {
+if (function_exists('kuaukutsu\poc\queue\amqp\tests\argument') === false) {
     function argument(string $name, string | int | null $default = null): string | int | null
     {
         global $argv;
