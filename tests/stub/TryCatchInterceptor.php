@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace kuaukutsu\poc\queue\amqp\tests\stub;
 
-use kuaukutsu\poc\queue\amqp\handler\HandlerInterface;
-use kuaukutsu\poc\queue\amqp\interceptor\InterceptorInterface;
-use kuaukutsu\poc\queue\amqp\QueueMessage;
 use Override;
 use Throwable;
+use kuaukutsu\queue\core\handler\HandlerInterface;
+use kuaukutsu\queue\core\interceptor\InterceptorInterface;
+use kuaukutsu\queue\core\QueueMessage;
 
 /**
  * @note: Перехватываем исключение, обрабатываем, пишем в log, sentry, trace...

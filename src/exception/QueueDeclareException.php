@@ -6,11 +6,11 @@ namespace kuaukutsu\poc\queue\amqp\exception;
 
 use Throwable;
 use RuntimeException;
-use kuaukutsu\poc\queue\amqp\QueueSchemaInterface;
+use kuaukutsu\queue\core\SchemaInterface;
 
 final class QueueDeclareException extends RuntimeException
 {
-    public function __construct(QueueSchemaInterface $schema, Throwable $previous)
+    public function __construct(SchemaInterface $schema, Throwable $previous)
     {
         parent::__construct(
             sprintf(

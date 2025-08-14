@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace kuaukutsu\poc\queue\amqp;
 
+use Override;
 use Throwable;
 use Thesis\Amqp\Channel;
 use Thesis\Amqp\Client;
 use Thesis\Amqp\DeliveryMessage;
-use kuaukutsu\poc\queue\amqp\exception\QueueConsumeException;
+use kuaukutsu\queue\core\exception\QueueConsumeException;
+use kuaukutsu\queue\core\handler\HandlerInterface;
+use kuaukutsu\queue\core\ConsumerInterface;
+use kuaukutsu\queue\core\QueueMessage;
+use kuaukutsu\queue\core\SchemaInterface;
 use kuaukutsu\poc\queue\amqp\exception\QueueDeclareException;
-use kuaukutsu\poc\queue\amqp\handler\HandlerInterface;
 
 /**
  * @api
  */
-final readonly class QueueConsumer
+final readonly class Consumer implements ConsumerInterface
 {
     private Channel $channel;
 
@@ -27,11 +31,12 @@ final readonly class QueueConsumer
     }
 
     /**
-     * @param ?callable(DeliveryMessage,Throwable):void $catch
+     * @param ?callable(string, Throwable): void $catch
      * @throws QueueDeclareException
      * @throws QueueConsumeException
      */
-    public function consume(QueueSchemaInterface $schema, ?callable $catch = null): void
+    #[Override]
+    public function consume(SchemaInterface $schema, ?callable $catch = null): void
     {
         try {
             $this->channel->queueDeclare(
@@ -50,12 +55,11 @@ final readonly class QueueConsumer
                 callback: static function (DeliveryMessage $delivery) use ($handler, $catch): void {
                     try {
                         $handler->handle(
-                            QueueMessage::makeFromMessage($delivery->message->body),
+                            QueueMessage::makeFromMessage($delivery->message->body)
                         );
                     } catch (Throwable $exception) {
                         if (is_callable($catch)) {
-                            $catch($delivery, $exception);
-                            return;
+                            $catch($delivery->message->body, $exception);
                         }
                     }
 
