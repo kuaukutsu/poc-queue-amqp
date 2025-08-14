@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 
 /**
@@ -20,17 +19,20 @@ require dirname(__DIR__) . '/bootstrap.php';
 $schema = QueueSchemaStub::from((string)argument('schema', 'low'));
 echo 'consumer run: ' . $schema->getRoutingKey() . PHP_EOL;
 
-$builder
+$consumer = $builder
     ->withInterceptors(
         new TryCatchInterceptor(),
     )
-    ->buildConsumer()
-    ->consume(
-        $schema,
-        static function (string $message, Throwable $exception): void {
-            echo sprintf('M: %s, error: %s', $message, $exception->getMessage());
-        }
-    );
+    ->buildConsumer();
+
+$consumer->consume(
+    $schema,
+    static function (string $message, Throwable $exception): void {
+        echo sprintf('M: %s, error: %s', $message, $exception->getMessage());
+    }
+);
 
 /** @noinspection PhpUnhandledExceptionInspection */
 trapSignal([SIGTERM, SIGINT]);
+$consumer->disconnect();
+exit(0);

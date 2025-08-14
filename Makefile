@@ -89,7 +89,7 @@ publisher:
 
 worker:
 	USER=$(USER) docker compose -f ./docker-compose.yml run --rm -u $(USER) -w /app/tests/simulation cli \
-		php worker.php --schema=high
+		php worker-with-exactlyonce.php --schema=high
 
 _image_remove:
 	docker image rm -f \
