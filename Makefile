@@ -35,27 +35,27 @@ check:
 		composer check
 
 psalm: ## psalm
-	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/psalm --php-version=${PHP_VERSION} --no-cache
 
 phpstan: ## phpstan
-	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/phpstan analyse -c phpstan.neon
 
 phpcs: ## php code snifferphp: detect violations of a defined coding standard
-	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/phpcs
 
 phpcbf: ## php code sniffer: automatically correct
-	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/phpcbf
 
 rector: ## rector
-	docker run --init -it --rm -v "$$(pwd):/app" -u ${USER} -w /app \
+	docker run --init -it --rm -u ${USER} -v "$$(pwd):/app" -w /app \
 		ghcr.io/kuaukutsu/php:${PHP_VERSION}-cli \
 		./vendor/bin/rector
 
