@@ -24,6 +24,11 @@ RUN <<EOF
 EOF
 ENV COMPOSER_CACHE_DIR=/var/.composer
 
+FROM app_setup AS app_worker
+
+USER $UID
+WORKDIR $WORKDIR
+
 FROM app_setup AS app_devel
 
 RUN install-php-extensions excimer xdebug

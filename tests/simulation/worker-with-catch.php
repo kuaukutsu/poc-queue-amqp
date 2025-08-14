@@ -3,12 +3,12 @@
 
 /**
  * Consumer.
- * @var QueueBuilder $builder bootstrap.php
+ * @var Builder $builder bootstrap.php
  */
 
 declare(strict_types=1);
 
-use kuaukutsu\poc\queue\amqp\QueueBuilder;
+use kuaukutsu\poc\queue\amqp\Builder;
 use kuaukutsu\poc\queue\amqp\tests\stub\QueueSchemaStub;
 use kuaukutsu\poc\queue\amqp\tests\stub\TryCatchInterceptor;
 

@@ -25,6 +25,35 @@ services:
     volumes: *service-volume
     logging: *default-logging
 
+  worker:
+    profiles: [ "local-not-work-why?" ]
+    build:
+      context: .docker/php/cli
+      target: app_worker
+      args:
+        UID: ${USER:-1} # ID:1 daemon, support: linux, mac
+        WORKDIR: "/app/tests/simulation"
+    deploy:
+      mode: replicated
+      replicas: 4
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .docker/base.env
+    command: [ "php", "worker.php", "--schema=high" ]
+    volumes: *service-volume
+    logging: *default-logging
+
   rabbitmq:
     container_name: queue_amqp_rabbitmq
     profiles: [ "serve" ]
