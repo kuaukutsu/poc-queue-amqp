@@ -1,15 +1,14 @@
-#!/usr/bin/env php
 <?php
 
 /**
  * Publisher, make task with exception.
- * @var QueueBuilder $builder bootstrap.php
+ * @var Builder $builder bootstrap.php
  */
 
 declare(strict_types=1);
 
 use kuaukutsu\queue\core\QueueTask;
-use kuaukutsu\poc\queue\amqp\QueueBuilder;
+use kuaukutsu\poc\queue\amqp\Builder;
 use kuaukutsu\poc\queue\amqp\tests\stub\QueueSchemaStub;
 
 use function kuaukutsu\poc\queue\amqp\tests\argument;

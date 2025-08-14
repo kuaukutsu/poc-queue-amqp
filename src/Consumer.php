@@ -10,11 +10,11 @@ use Thesis\Amqp\Channel;
 use Thesis\Amqp\Client;
 use Thesis\Amqp\DeliveryMessage;
 use kuaukutsu\queue\core\exception\QueueConsumeException;
+use kuaukutsu\queue\core\exception\QueueDeclareException;
 use kuaukutsu\queue\core\handler\HandlerInterface;
 use kuaukutsu\queue\core\ConsumerInterface;
 use kuaukutsu\queue\core\QueueMessage;
 use kuaukutsu\queue\core\SchemaInterface;
-use kuaukutsu\poc\queue\amqp\exception\QueueDeclareException;
 
 /**
  * @api

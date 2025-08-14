@@ -15,10 +15,7 @@
   },
   "require": {
     "php": "^8.3",
-    "amphp/cache": "^2.0",
-    "amphp/sync": "^2.3",
-    "kuaukutsu/queue-core": "*",
-    "php-di/php-di": "^7.0",
+    "kuaukutsu/queue-core": "^0.1",
     "ramsey/uuid": "^4.9",
     "thesis/amqp": "^1.0.2"
   },
@@ -26,6 +23,7 @@
     "ext-pcntl": "*",
     "ext-redis": "*",
     "amphp/redis": "^2.0",
+    "php-di/php-di": "^7.0",
     "phpstan/phpstan": "^2.0",
     "phpunit/phpunit": "^10.1",
     "rector/rector": "^2.0",

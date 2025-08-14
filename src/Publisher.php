@@ -12,7 +12,7 @@ use Thesis\Amqp\Channel;
 use Thesis\Amqp\DeliveryMode;
 use Thesis\Amqp\Message;
 use Thesis\Amqp\PublishConfirmation;
-use kuaukutsu\poc\queue\amqp\exception\QueueDeclareException;
+use kuaukutsu\queue\core\exception\QueueDeclareException;
 use kuaukutsu\queue\core\exception\QueuePublishException;
 use kuaukutsu\queue\core\QueueContext;
 use kuaukutsu\queue\core\QueueMessage;
