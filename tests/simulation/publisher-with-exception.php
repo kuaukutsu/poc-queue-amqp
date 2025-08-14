@@ -8,8 +8,8 @@
 
 declare(strict_types=1);
 
+use kuaukutsu\queue\core\QueueTask;
 use kuaukutsu\poc\queue\amqp\QueueBuilder;
-use kuaukutsu\poc\queue\amqp\QueueTask;
 use kuaukutsu\poc\queue\amqp\tests\stub\QueueSchemaStub;
 
 use function kuaukutsu\poc\queue\amqp\tests\argument;

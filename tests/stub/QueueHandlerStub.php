@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace kuaukutsu\poc\queue\amqp\tests\stub;
 
 use Override;
-use kuaukutsu\poc\queue\amqp\QueueContext;
-use kuaukutsu\poc\queue\amqp\QueueHandlerInterface;
+use kuaukutsu\queue\core\QueueContext;
+use kuaukutsu\queue\core\TaskInterface;
 
-final readonly class QueueHandlerStub implements QueueHandlerInterface
+final readonly class QueueHandlerStub implements TaskInterface
 {
     public function __construct(
         public int $id,

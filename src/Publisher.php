@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\poc\queue\amqp;
 
+use Override;
 use Throwable;
 use RuntimeException;
 use Thesis\Amqp\Client;
@@ -12,12 +13,17 @@ use Thesis\Amqp\DeliveryMode;
 use Thesis\Amqp\Message;
 use Thesis\Amqp\PublishConfirmation;
 use kuaukutsu\poc\queue\amqp\exception\QueueDeclareException;
-use kuaukutsu\poc\queue\amqp\exception\QueuePublishException;
+use kuaukutsu\queue\core\exception\QueuePublishException;
+use kuaukutsu\queue\core\QueueContext;
+use kuaukutsu\queue\core\QueueMessage;
+use kuaukutsu\queue\core\QueueTask;
+use kuaukutsu\queue\core\PublisherInterface;
+use kuaukutsu\queue\core\SchemaInterface;
 
 /**
  * @api
  */
-final readonly class QueuePublisher
+final readonly class Publisher implements PublisherInterface
 {
     private Channel $channel;
 
@@ -49,7 +55,8 @@ final readonly class QueuePublisher
      * @throws QueueDeclareException
      * @throws QueuePublishException
      */
-    public function push(QueueSchemaInterface $schema, QueueTask $task, ?QueueContext $context = null): string
+    #[Override]
+    public function push(SchemaInterface $schema, QueueTask $task, ?QueueContext $context = null): string
     {
         try {
             $this->channel->queueDeclare(
@@ -89,12 +96,7 @@ final readonly class QueuePublisher
     private function makeMessage(QueueTask $task, QueueContext $context): Message
     {
         return new Message(
-            body: serialize(
-                [
-                    $task,
-                    $context,
-                ]
-            ),
+            body: QueueMessage::makeMessage($task, $context),
             deliveryMode: DeliveryMode::Persistent,
         );
     }

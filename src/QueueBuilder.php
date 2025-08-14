@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace kuaukutsu\poc\queue\amqp;
 
+use DI\FactoryInterface;
 use Thesis\Amqp\Client;
 use Thesis\Amqp\Config;
-use kuaukutsu\poc\queue\amqp\handler\HandlerInterface;
-use kuaukutsu\poc\queue\amqp\handler\Pipeline;
-use kuaukutsu\poc\queue\amqp\interceptor\InterceptorInterface;
+use kuaukutsu\queue\core\handler\HandlerInterface;
+use kuaukutsu\queue\core\handler\Pipeline;
+use kuaukutsu\queue\core\interceptor\InterceptorInterface;
+use kuaukutsu\poc\queue\amqp\internal\FactoryProxy;
 
 /**
  * @api
@@ -20,11 +22,11 @@ final class QueueBuilder
     private HandlerInterface $handler;
 
     public function __construct(
-        \DI\FactoryInterface | FactoryInterface $factory,
+        FactoryInterface $factory,
         ?HandlerInterface $handler = null,
     ) {
         $this->config = new Config();
-        $this->handler = $handler ?? new Pipeline($factory);
+        $this->handler = $handler ?? new Pipeline(new FactoryProxy($factory));
     }
 
     public function withConfig(Config $config): self
@@ -42,13 +44,13 @@ final class QueueBuilder
         return $clone;
     }
 
-    public function buildPublisher(): QueuePublisher
+    public function buildPublisher(): Publisher
     {
-        return new QueuePublisher(new Client($this->config));
+        return new Publisher(new Client($this->config));
     }
 
-    public function buildConsumer(): QueueConsumer
+    public function buildConsumer(): Consumer
     {
-        return new QueueConsumer(new Client($this->config), $this->handler);
+        return new Consumer(new Client($this->config), $this->handler);
     }
 }

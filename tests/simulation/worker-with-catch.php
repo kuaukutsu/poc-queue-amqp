@@ -8,7 +8,6 @@
 
 declare(strict_types=1);
 
-use Thesis\Amqp\DeliveryMessage;
 use kuaukutsu\poc\queue\amqp\QueueBuilder;
 use kuaukutsu\poc\queue\amqp\tests\stub\QueueSchemaStub;
 use kuaukutsu\poc\queue\amqp\tests\stub\TryCatchInterceptor;
@@ -28,9 +27,8 @@ $builder
     ->buildConsumer()
     ->consume(
         $schema,
-        static function (DeliveryMessage $message, Throwable $exception): void {
-            echo 'nack: ' . $exception->getMessage();
-            $message->nack();
+        static function (string $message, Throwable $exception): void {
+            echo sprintf('M: %s, error: %s', $message, $exception->getMessage());
         }
     );
 
