@@ -12,6 +12,7 @@ use Thesis\Amqp\Channel;
 use Thesis\Amqp\DeliveryMode;
 use Thesis\Amqp\Message;
 use Thesis\Amqp\PublishConfirmation;
+use Thesis\Amqp\PublishMessage;
 use kuaukutsu\queue\core\exception\QueueDeclareException;
 use kuaukutsu\queue\core\exception\QueuePublishException;
 use kuaukutsu\queue\core\QueueContext;
@@ -58,14 +59,7 @@ final readonly class Publisher implements PublisherInterface
     #[Override]
     public function push(SchemaInterface $schema, QueueTask $task, ?QueueContext $context = null): string
     {
-        try {
-            $this->channel->queueDeclare(
-                queue: $schema->getRoutingKey(),
-                durable: true,
-            );
-        } catch (Throwable $exception) {
-            throw new QueueDeclareException($schema, $exception);
-        }
+        $this->declareQueue($schema);
 
         try {
             $this->ensurePublished(
@@ -75,16 +69,61 @@ final readonly class Publisher implements PublisherInterface
                 )
             );
         } catch (Throwable $exception) {
-            throw new QueuePublishException($task, $schema, $exception);
+            throw new QueuePublishException($schema, $exception);
         }
 
         return $task->getUuid();
+    }
+
+    /**
+     * @throws QueueDeclareException
+     * @throws QueuePublishException
+     */
+    #[Override]
+    public function pushBatch(SchemaInterface $schema, array $taskBatch, ?QueueContext $context = null): array
+    {
+        if ($taskBatch === []) {
+            return [];
+        }
+
+        $messageList = [];
+        foreach ($taskBatch as $task) {
+            $messageList[$task->getUuid()] = new PublishMessage(
+                message: $this->makeMessage($task, $context ?? QueueContext::make($schema)),
+                routingKey: $schema->getRoutingKey(),
+            );
+        }
+
+        $this->declareQueue($schema);
+
+        try {
+            $this->channel->publishBatch(array_values($messageList));
+        } catch (Throwable $exception) {
+            throw new QueuePublishException($schema, $exception);
+        }
+
+        return array_keys($messageList);
     }
 
     public function disconnect(): void
     {
         $this->channel->close();
         $this->client->disconnect();
+    }
+
+    /**
+     * @throws QueueDeclareException
+     */
+    private function declareQueue(SchemaInterface $schema): void
+    {
+        try {
+            $this->channel->queueDeclare(
+                queue: $schema->getRoutingKey(),
+                durable: true,
+            );
+        } catch (Throwable $exception) {
+            throw new QueueDeclareException($schema, $exception);
+        }
     }
 
     /**

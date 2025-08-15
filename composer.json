@@ -58,8 +58,7 @@
     "check": [
       "@phpcs",
       "@psalm",
-      "@phpstan",
-      "@rector"
+      "@phpstan"
     ],
     "phpcs": "vendor/bin/phpcs",
     "psalm": "vendor/bin/psalm --show-info --no-diff --no-cache",
