@@ -26,7 +26,7 @@ services:
     logging: *default-logging
 
   worker:
-    profiles: [ "local-not-work-why?" ]
+    profiles: [ "serve" ]
     build:
       context: .docker/php/cli
       target: app_worker

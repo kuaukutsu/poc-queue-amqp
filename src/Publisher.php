@@ -27,7 +27,7 @@ final readonly class Publisher implements PublisherInterface
 {
     private Channel $channel;
 
-    public function __construct(Client $client)
+    public function __construct(private Client $client)
     {
         $this->channel = $client->channel();
     }
@@ -79,6 +79,12 @@ final readonly class Publisher implements PublisherInterface
         }
 
         return $task->getUuid();
+    }
+
+    public function disconnect(): void
+    {
+        $this->channel->close();
+        $this->client->disconnect();
     }
 
     /**

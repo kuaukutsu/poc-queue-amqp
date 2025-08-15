@@ -24,7 +24,7 @@ final readonly class Consumer implements ConsumerInterface
     private Channel $channel;
 
     public function __construct(
-        Client $client,
+        private Client $client,
         private HandlerInterface $handler,
     ) {
         $this->channel = $client->channel();
@@ -70,5 +70,11 @@ final readonly class Consumer implements ConsumerInterface
         } catch (Throwable $exception) {
             throw new QueueConsumeException($schema, $exception);
         }
+    }
+
+    public function disconnect(): void
+    {
+        $this->channel->close();
+        $this->client->disconnect();
     }
 }
