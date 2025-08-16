@@ -23,7 +23,7 @@ $task = new QueueTask(
     target: stdClass::class,
     arguments: [
         'id' => 1,
-        'name' => 'test name',
+        'name' => 'test exception',
     ],
 );
 
