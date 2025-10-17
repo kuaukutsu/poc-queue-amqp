@@ -6,8 +6,17 @@ x-default-logging: &default-logging
 
 x-service-volume: &service-volume
   - type: bind
-    source: .
-    target: /app
+    source: ./src
+    target: /src
+  - type: bind
+    source: ./tests
+    target: /tests
+  - type: bind
+    source: ./benchmark
+    target: /benchmark
+  - type: bind
+    source: ./vendor
+    target: /vendor
 
 name: queue_amqp
 services:
