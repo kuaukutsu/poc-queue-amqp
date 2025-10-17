@@ -80,3 +80,44 @@ $builder
 - https://github.com/thesis-php/amqp
 - https://github.com/rabbitmq/rabbitmq-tutorials/tree/main/php-thesis
 - https://spiral.dev/docs/framework-interceptors/current/en
+
+Benchmark
+
+```
+PHPBench (1.4.1) running benchmarks...
+with configuration file: /benchmark/phpbench.json
+with PHP version 8.3.22, xdebug ✔, opcache ❌
+
+\kuaukutsu\poc\queue\redis\benchmarks\PublisherBench
+
+    benchAsWhile............................I4 - Mo167.758ms (±55.89%)
+    benchAsBatch............................I4 - Mo11.905ms (±3.25%)
+
+Subjects: 2, Assertions: 0, Failures: 0, Errors: 0
++----------------+--------------+-----+------+-----+----------+-----------+---------+
+| benchmark      | subject      | set | revs | its | mem_peak | mode      | rstdev  |
++----------------+--------------+-----+------+-----+----------+-----------+---------+
+| PublisherBench | benchAsWhile |     | 10   | 5   | 6.405mb  | 167.758ms | ±55.89% |
+| PublisherBench | benchAsBatch |     | 10   | 5   | 6.216mb  | 11.905ms  | ±3.25%  |
++----------------+--------------+-----+------+-----+----------+-----------+---------+
+```
+
+With igbinary
+```
+PHPBench (1.4.1) running benchmarks...
+with configuration file: /benchmark/phpbench.json
+with PHP version 8.3.22, xdebug ✔, opcache ✔
+
+\kuaukutsu\poc\queue\redis\benchmarks\PublisherBench
+
+    benchAsWhile............................I4 - Mo167.864ms (±44.56%)
+    benchAsBatch............................I4 - Mo11.772ms (±0.78%)
+
+Subjects: 2, Assertions: 0, Failures: 0, Errors: 0
++----------------+--------------+-----+------+-----+----------+-----------+---------+
+| benchmark      | subject      | set | revs | its | mem_peak | mode      | rstdev  |
++----------------+--------------+-----+------+-----+----------+-----------+---------+
+| PublisherBench | benchAsWhile |     | 10   | 5   | 2.788mb  | 167.864ms | ±44.56% |
+| PublisherBench | benchAsBatch |     | 10   | 5   | 2.499mb  | 11.772ms  | ±0.78%  |
++----------------+--------------+-----+------+-----+----------+-----------+---------+
+```

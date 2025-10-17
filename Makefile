@@ -81,15 +81,19 @@ build:
 remove: down _image_remove _container_remove _volume_remove
 
 app:
-	USER=$(USER) docker compose -f ./docker-compose.yml run --rm -u $(USER) -w /app/src cli sh
+	USER=$(USER) docker compose -f ./docker-compose.yml run --rm -u $(USER) -w /src cli sh
 
 publisher:
-	USER=$(USER) docker compose -f ./docker-compose.yml run --rm -u $(USER) -w /app/tests/simulation cli \
+	USER=$(USER) docker compose -f ./docker-compose.yml run --rm -u $(USER) -w /tests/simulation cli \
 		php publisher.php --schema=high
 
 worker:
-	USER=$(USER) docker compose -f ./docker-compose.yml run --rm -u $(USER) -w /app/tests/simulation cli \
+	USER=$(USER) docker compose -f ./docker-compose.yml run --rm -u $(USER) -w /tests/simulation cli \
 		php worker-with-exactlyonce.php --schema=high
+
+bench: ## bench
+	USER=$(USER) docker compose -f ./docker-compose.yml run --rm -u $(USER) -w / cli \
+		./vendor/bin/phpbench run ./benchmark --report=aggregate --config=/benchmark/phpbench.json
 
 _image_remove:
 	docker image rm -f \

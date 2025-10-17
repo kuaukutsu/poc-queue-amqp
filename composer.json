@@ -15,7 +15,7 @@
   },
   "require": {
     "php": "^8.3",
-    "kuaukutsu/queue-core": "^0.1",
+    "kuaukutsu/queue-core": "^0.2",
     "ramsey/uuid": "^4.9",
     "thesis/amqp": "^1.0.2"
   },
@@ -26,6 +26,7 @@
     "php-di/php-di": "^7.0",
     "phpstan/phpstan": "^2.0",
     "phpunit/phpunit": "^10.1",
+    "phpbench/phpbench": "^1.4",
     "rector/rector": "^2.0",
     "roave/security-advisories": "dev-latest",
     "slevomat/coding-standard": "^8.7",
