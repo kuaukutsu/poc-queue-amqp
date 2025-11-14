@@ -30,9 +30,9 @@ $consumer = $builder
             new RedisMutex($redis),
         ),
     )
-    ->buildConsumer();
+    ->buildConsumer($schema);
 
-$consumer->consume($schema);
+$consumer->consume();
 
 /** @noinspection PhpUnhandledExceptionInspection */
 trapSignal([SIGTERM, SIGINT]);

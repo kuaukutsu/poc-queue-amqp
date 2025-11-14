@@ -15,7 +15,7 @@
   },
   "require": {
     "php": "^8.3",
-    "kuaukutsu/queue-core": "^0.2",
+    "kuaukutsu/queue-core": "^0.3",
     "ramsey/uuid": "^4.9",
     "thesis/amqp": "^1.0.2"
   },
