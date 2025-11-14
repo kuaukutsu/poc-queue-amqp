@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\poc\queue\amqp;
 
+use kuaukutsu\queue\core\SchemaInterface;
 use Override;
 use RuntimeException;
 use Thesis\Amqp\Client;
@@ -57,8 +58,8 @@ final class Builder implements BuilderInterface
     }
 
     #[Override]
-    public function buildConsumer(): Consumer
+    public function buildConsumer(SchemaInterface $schema): Consumer
     {
-        return new Consumer(new Client($this->config), $this->handler);
+        return new Consumer(new Client($this->config), $this->handler, $schema);
     }
 }

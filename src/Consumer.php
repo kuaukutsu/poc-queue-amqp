@@ -26,6 +26,7 @@ final readonly class Consumer implements ConsumerInterface
     public function __construct(
         private Client $client,
         private HandlerInterface $handler,
+        private SchemaInterface $schema,
     ) {
         $this->channel = $client->channel();
     }
@@ -36,15 +37,15 @@ final readonly class Consumer implements ConsumerInterface
      * @throws QueueConsumeException
      */
     #[Override]
-    public function consume(SchemaInterface $schema, ?callable $catch = null): void
+    public function consume(?callable $catch = null): void
     {
         try {
             $this->channel->queueDeclare(
-                queue: $schema->getRoutingKey(),
+                queue: $this->schema->getRoutingKey(),
                 durable: true,
             );
         } catch (Throwable $exception) {
-            throw new QueueDeclareException($schema, $exception);
+            throw new QueueDeclareException($this->schema, $exception);
         }
 
         $handler = $this->handler;
@@ -65,10 +66,10 @@ final readonly class Consumer implements ConsumerInterface
 
                     $delivery->ack();
                 },
-                queue: $schema->getRoutingKey(),
+                queue: $this->schema->getRoutingKey(),
             );
         } catch (Throwable $exception) {
-            throw new QueueConsumeException($schema, $exception);
+            throw new QueueConsumeException($this->schema, $exception);
         }
     }
 
