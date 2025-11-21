@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\poc\queue\amqp;
 
+use Closure;
 use Override;
 use Throwable;
 use Thesis\Amqp\Channel;
@@ -26,28 +27,28 @@ final readonly class Consumer implements ConsumerInterface
     public function __construct(
         private Client $client,
         private HandlerInterface $handler,
-        private SchemaInterface $schema,
+        private ?Closure $catch = null,
     ) {
         $this->channel = $client->channel();
     }
 
     /**
-     * @param ?callable(string, Throwable): void $catch
      * @throws QueueDeclareException
      * @throws QueueConsumeException
      */
     #[Override]
-    public function consume(?callable $catch = null): void
+    public function consume(SchemaInterface $schema): void
     {
         try {
             $this->channel->queueDeclare(
-                queue: $this->schema->getRoutingKey(),
+                queue: $schema->getRoutingKey(),
                 durable: true,
             );
         } catch (Throwable $exception) {
-            throw new QueueDeclareException($this->schema, $exception);
+            throw new QueueDeclareException($schema, $exception);
         }
 
+        $catch = $this->catch;
         $handler = $this->handler;
 
         try {
@@ -62,17 +63,20 @@ final readonly class Consumer implements ConsumerInterface
                         if (is_callable($catch)) {
                             $catch($delivery->message->body, $exception);
                         }
+
+                        // DLQ
                     }
 
                     $delivery->ack();
                 },
-                queue: $this->schema->getRoutingKey(),
+                queue: $schema->getRoutingKey(),
             );
         } catch (Throwable $exception) {
-            throw new QueueConsumeException($this->schema, $exception);
+            throw new QueueConsumeException($schema, $exception);
         }
     }
 
+    #[Override]
     public function disconnect(): void
     {
         $this->channel->close();
