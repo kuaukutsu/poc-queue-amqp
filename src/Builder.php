@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace kuaukutsu\poc\queue\amqp;
 
-use kuaukutsu\queue\core\SchemaInterface;
+use Closure;
 use Override;
 use RuntimeException;
 use Thesis\Amqp\Client;
@@ -24,6 +24,8 @@ final class Builder implements BuilderInterface
 
     private HandlerInterface $handler;
 
+    private ?Closure $catch = null;
+
     public function __construct(
         FactoryInterface $factory,
         ?HandlerInterface $handler = null,
@@ -40,11 +42,19 @@ final class Builder implements BuilderInterface
     }
 
     #[Override]
+    public function withCatch(Closure $catch): BuilderInterface
+    {
+        $clone = clone $this;
+        $clone->catch = $catch;
+        return $clone;
+    }
+
+
+    #[Override]
     public function withInterceptors(InterceptorInterface ...$interceptor): self
     {
         $clone = clone $this;
         $clone->handler = $this->handler->withInterceptors(...$interceptor);
-
         return $clone;
     }
 
@@ -58,8 +68,8 @@ final class Builder implements BuilderInterface
     }
 
     #[Override]
-    public function buildConsumer(SchemaInterface $schema): Consumer
+    public function buildConsumer(): Consumer
     {
-        return new Consumer(new Client($this->config), $this->handler, $schema);
+        return new Consumer(new Client($this->config), $this->handler, $this->catch);
     }
 }

@@ -20,16 +20,17 @@ $schema = QueueSchemaStub::from((string)argument('schema', 'low'));
 echo 'consumer run: ' . $schema->getRoutingKey() . PHP_EOL;
 
 $consumer = $builder
+    ->withCatch(
+        static function (?string $message, Throwable $exception): void {
+            echo sprintf('M: %s, error: %s', $message, $exception->getMessage());
+        }
+    )
     ->withInterceptors(
         new TryCatchInterceptor(),
     )
-    ->buildConsumer($schema);
+    ->buildConsumer();
 
-$consumer->consume(
-    static function (string $message, Throwable $exception): void {
-        echo sprintf('M: %s, error: %s', $message, $exception->getMessage());
-    }
-);
+$consumer->consume($schema);
 
 /** @noinspection PhpUnhandledExceptionInspection */
 trapSignal([SIGTERM, SIGINT]);
