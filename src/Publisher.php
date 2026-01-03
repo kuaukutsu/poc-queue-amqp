@@ -80,12 +80,15 @@ final readonly class Publisher implements PublisherInterface
      * @throws QueuePublishException
      */
     #[Override]
-    public function pushBatch(SchemaInterface $schema, array $taskBatch, ?QueueContext $context = null): array
+    public function pushBatch(SchemaInterface $schema, iterable $taskBatch, ?QueueContext $context = null): array
     {
         if ($taskBatch === []) {
             return [];
         }
 
+        /**
+         * @var non-empty-array<non-empty-string, PublishMessage> $messageList
+         */
         $messageList = [];
         foreach ($taskBatch as $task) {
             $messageList[$task->getUuid()] = new PublishMessage(
